@@ -23,5 +23,35 @@ router.get('/:id', (req, res) => {
 })
 
 
+router.post('/', (req, res) => {
+  const { name, price } = req.body;
+   const id = Number(req.body.id);
+  if (!id || !name || price === undefined) {
+    return res.status(400).json({
+      error: "id, name, and price are required"
+    });
+  }
+ 
+
+if (Number.isNaN(id)) {
+  return res.status(400).json({ error: "id must be a number" });
+}
+  
+  const exists =  products.find(p => p.id === id);  
+  if (exists) {
+    return res.status(409).json({ error: "product with this id already exists" });
+  }
+
+  if (typeof price !== 'number' || price < 0) {
+    return res.status(400).json({
+      error: "price must be a non-negative number"
+    });
+  }
+  let newProduct = { id, name, price };
+  products.push(newProduct);
+  res.status(201).json(newProduct);
+});
+
+
 export default router
 
