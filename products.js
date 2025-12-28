@@ -52,6 +52,29 @@ if (Number.isNaN(id)) {
   res.status(201).json(newProduct);
 });
 
+router.put('/:id', (req, res) => {
+  const productId = parseInt(req.params.id);
+  const { name, price } = req.body; 
+  const product = products.find(p => p.id === productId);
+
+  if (!product) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+  if (name !== undefined) product.name = name;
+  if (price !== undefined) {
+    if (typeof price !== 'number' || price < 0) {   
+      return res.status(400).json({
+        error: "price must be a non-negative number"
+      });
+    } 
+    product.price = price;
+  }
+  res.json(product);
+});
+
+
+
+
 
 export default router
 
