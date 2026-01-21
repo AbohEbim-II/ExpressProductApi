@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import productRoutes from "./products.js";
+import productRoutes from "./routes/products.route.js";
 import authRoutes from "./routes/auth.routes.js";
 import cors from "cors";
 import connectDB from "./config/database.js";
@@ -14,7 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors());
 
-app.use("/products", productRoutes)
+app.use("/api/products", productRoutes)
 app.use("/api/auth", authRoutes);
 
 app.use((err, req, res, next) => {

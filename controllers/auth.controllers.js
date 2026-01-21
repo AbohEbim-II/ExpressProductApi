@@ -13,7 +13,7 @@ export const register = asyncHandler(async (req, res) => {
     if (existingUser) {
         res.status(409);
         throw new Error("User with this email or username already exists");
-    }   
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
@@ -25,17 +25,17 @@ export const login = asyncHandler(async (req, res) => {
     if (!email || !password) {
         res.status(400);
         throw new Error("Email and password are required");
-    }       
+    }
     const user = await User.findOne({ email });
     if (!user) {
         res.status(401);
         throw new Error("Invalid email or password");
-    }   
+    }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         res.status(401);
         throw new Error("Invalid email or password");
-    }   
+    }
     const token = jwt.sign(
         { userId: user._id, username: user.username },
         process.env.JWT_SECRET,
