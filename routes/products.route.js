@@ -1,5 +1,5 @@
 import express from "express"
-import { createProduct, getAllProducts, getProductById } from "../controllers/products.controller.js"
+import { createProduct, editProduct, getAllProducts, getProductById } from "../controllers/products.controller.js"
 import { protect } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
@@ -14,25 +14,7 @@ router.get('/:id', getProductById)
 
 router.post('/', protect, createProduct )
 
-router.put('/:id', (req, res) => {
-  const productId = parseInt(req.params.id);
-  const { name, price } = req.body; 
-  const product = products.find(p => p.id === productId);
-
-  if (!product) {
-    return res.status(404).json({ error: "Product not found" });
-  }
-  if (name !== undefined) product.name = name;
-  if (price !== undefined) {
-    if (typeof price !== 'number' || price < 0) {   
-      return res.status(400).json({
-        error: "price must be a non-negative number"
-      });
-    } 
-    product.price = price;
-  }
-  res.json(product);
-});
+router.put('/:id', protect, editProduct);
 
 router.delete('/:id', (req, res) => {
   const productId = parseInt(req.params.id);
