@@ -19,7 +19,6 @@ const protect = asyncHandler(async (req, res, next) => {
     if(!token) {
         res.status(401).json('Not authorized, No token')
     }
-    console.log(req.user)  
 })
 
 const isAdmin = (req, res, next) => {
