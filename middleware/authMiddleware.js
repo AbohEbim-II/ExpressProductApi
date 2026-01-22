@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler';
+import User from '../models/users.model.js';
 import jwt from 'jsonwebtoken';
 
 const protect = asyncHandler(async (req, res, next) => {
@@ -7,7 +8,7 @@ const protect = asyncHandler(async (req, res, next) => {
         try {
             token = req.headers.authorization.split(" ")[1]
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
-            req.user = decoded.userId
+            req.user = await User.findById(decoded.userId)
             next()
             return
         } catch(error) {
@@ -18,13 +19,14 @@ const protect = asyncHandler(async (req, res, next) => {
     if(!token) {
         res.status(401).json('Not authorized, No token')
     }
+    console.log(req.user)  
 })
 
 const isAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {
-    res.status(403).json({ message: "Admin access only" });
+    res.status(403).json({ message: "Admin access required" });
   }
 };
 
