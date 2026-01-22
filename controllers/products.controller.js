@@ -53,3 +53,13 @@ export const editProduct = asyncHandler(async (req, res) => {
   const updatedProduct = await product.save();
   res.json(updatedProduct);
 });
+
+
+export const deleteProduct = asyncHandler(async(req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+  await product.deleteOne();
+  res.json("Product Deeleted Successfully");
+})
